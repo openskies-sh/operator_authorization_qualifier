@@ -3,7 +3,7 @@ import string
 import json
 import random
 from itertools import cycle
-from utils import OperatorLocation, FlightAuthorizationPartialPayload
+from utils import OperatorLocation, OperatorDataPartialPayload
 import dataclasses
 
 class OperatorFlightDataGenerator():
@@ -70,6 +70,6 @@ if __name__ == '__main__':
     serial_number = my_operator_flight_data_generator.generate_serial_number()
     operator_registration_number = my_operator_flight_data_generator.generate_registration_number()
 
-    flight_auth_payload = FlightAuthorizationPartialPayload(uas_serial_number = serial_number, operation_category='u-space', operation_mode = 'vlos',uas_class='C0', identification_technologies = 'vlos', connectivity_methods = [], endurance_minutes = [] , emergency_procedure_url = "https://uav.com/emergency", operator_id = operator_registration_number)
+    operator_data_payload = OperatorDataPartialPayload(uas_serial_number = serial_number, operation_category='u-space', operation_mode = 'vlos',uas_class='C0', identification_technologies = 'vlos', connectivity_methods = [], endurance_minutes = [] , emergency_procedure_url = "https://uav.com/emergency", operator_id = operator_registration_number)
 
-    print(json.dumps(dataclasses.asdict(flight_auth_payload)))
+    print(json.dumps(dataclasses.asdict(operator_data_payload)))
