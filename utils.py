@@ -1,8 +1,6 @@
 from dataclasses import dataclass
-import uuid
 import enum
 from typing import List, Literal
-import arrow
 
 
 @dataclass
@@ -26,16 +24,20 @@ class UASClass(str, enum.Enum):
     C3 = 'C3'
     C4 = 'C4'
 
+class TestResultState(str, enum.Enum):
+    ''' A test is either pass or fail or could not be processed, currently not  '''
+    Pass = 'Pass'
+    Fail = 'Fail'
+    
 
 class IDTechnology(str, enum.Enum):
     ''' A enum to hold ID technologies for an operation '''
     Network = 'network'
     Broadcast = 'broadcast'
 
-
 @dataclass
-class OperatorDataPartialPayload:
-    '''A clas to hold information about Flight Authorization Test'''
+class PartialOperatorDataPayload:
+    '''A class to hold information about Flight Authorization Test'''
     uas_serial_number: str
     operation_mode: Literal[OperationCategory.Vlos, OperationCategory.Bvlos]
     operation_category: str
@@ -47,3 +49,35 @@ class OperatorDataPartialPayload:
     endurance_minutes: int
     emergency_procedure_url: str
     operator_id: str
+
+@dataclass
+class TestResult:
+    ''' A class to hold result of a test '''
+    result: Literal[TestResultState.Pass, TestResultState.Fail]
+
+
+@dataclass
+class TestPayload:
+    ''' A class to hold data about test data and the expected result, the test driver would submit the data and the result to the test harness '''
+    operator_data: PartialOperatorDataPayload
+    result: TestResult
+
+
+
+@dataclass
+class InjectionTargetConfiguration:
+    ''' This object defines the data required for a uss '''
+    name: str
+    injection_base_url: str
+
+@dataclass
+class OperatorFlightDataTestConfiguration:
+    locale: str
+    """A three letter ISO 3166 country code to run the qualifier against.
+    """
+
+    injection_target: InjectionTargetConfiguration
+
+@dataclass
+class Report: 
+    pass

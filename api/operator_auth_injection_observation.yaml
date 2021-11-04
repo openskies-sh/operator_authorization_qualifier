@@ -117,7 +117,7 @@ components:
     OperatorDataProcessingResponseFormat:
       type: object
       properties:
-        results:
+        result:
           type: string 
           anyOf:
             - $ref: '#/components/schemas/ProcessingPassorFail'
