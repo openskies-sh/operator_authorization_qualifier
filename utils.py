@@ -51,7 +51,7 @@ class PartialOperatorDataPayload:
     operator_id: str
 
 @dataclass
-class TestResult:
+class ExpectedTestResult:
     ''' A class to hold result of a test '''
     result: Literal[TestResultState.Pass, TestResultState.Fail]
 
@@ -60,8 +60,7 @@ class TestResult:
 class TestPayload:
     ''' A class to hold data about test data and the expected result, the test driver would submit the data and the result to the test harness '''
     operator_data: PartialOperatorDataPayload
-    result: TestResult
-
+    result: ExpectedTestResult
 
 
 @dataclass
@@ -71,13 +70,23 @@ class InjectionTargetConfiguration:
     injection_base_url: str
 
 @dataclass
+class OperatorDataFormatTestConfiguration:
+    injection_target: InjectionTargetConfiguration
+
+
+@dataclass
+class Setup():
+  configuration: OperatorDataFormatTestConfiguration
+  data_payload: TestPayload
+
+@dataclass
 class OperatorFlightDataTestConfiguration:
     locale: str
     """A three letter ISO 3166 country code to run the qualifier against.
     """
-
     injection_target: InjectionTargetConfiguration
 
 @dataclass
 class Report: 
-    pass
+  setup: Setup
+  finding: ExpectedTestResult

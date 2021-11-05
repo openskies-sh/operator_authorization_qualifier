@@ -1,7 +1,7 @@
 import json
 import random
 import dataclasses
-from utils import TestPayload, PartialOperatorDataPayload, TestResult, OperatorFlightDataTestConfiguration, Report
+from utils import TestPayload, PartialOperatorDataPayload, TestResult, OperatorFlightDataTestConfiguration, Report, Setup
 from operator_data_generator import OperatorFlightDataGenerator
 
 class TestBuilder() :
@@ -42,8 +42,12 @@ class TestBuilder() :
         return test_payload
 
 
-def main(test_configuration: OperatorFlightDataTestConfiguration) -> Report:
-    pass
+def main(test_configuration: OperatorFlightDataTestConfiguration,
+        auth_spec: str = None) -> Report:
+    my_test_builder = TestBuilder()
+    test_payload = my_test_builder.build_test_payload()
+    report = Report(setup=Setup(configuration= test_configuration, finding=test_payload.result)
+    )
 
 if __name__ == '__main__':
     ''' This module generates a JSON that can be used to test '''

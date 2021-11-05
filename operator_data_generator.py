@@ -64,7 +64,7 @@ class OperatorFlightDataGenerator():
                 """Calculate partial sum ofr a single digit."""
                 quotient, remainder = divmod(number * mult_factor, 36)
                 return quotient + remainder
-            final_sum = sum(
+            final_sum = sum(                
                 partial_sum(int(character), mult_factor)
                 for character, mult_factor in zip(numeric_base_id, mult_factors))
         
