@@ -60,7 +60,7 @@ class ExpectedTestResult:
 class TestPayload:
     ''' A class to hold data about test data and the expected result, the test driver would submit the data and the result to the test harness '''
     operator_data: PartialOperatorDataPayload
-    result: ExpectedTestResult
+    expected_result: ExpectedTestResult
 
 
 @dataclass
@@ -90,3 +90,4 @@ class OperatorFlightDataTestConfiguration:
 class Report: 
   setup: Setup
   finding: ExpectedTestResult
+  error: str

@@ -1,4 +1,6 @@
 import json
+import requests
+import arrow
 import random
 import dataclasses
 from utils import TestPayload, PartialOperatorDataPayload, TestResult, OperatorFlightDataTestConfiguration, Report, Setup
@@ -36,18 +38,40 @@ class TestBuilder() :
 
         expected_test_result = TestResult(result = expected_test_result)
 
-        test_payload = TestPayload(operator_data=operator_data_payload,result=expected_test_result)
+        test_payload = TestPayload(operator_data=operator_data_payload,expected_result=expected_test_result)
         test_payload = dataclasses.asdict(test_payload)
         
         return test_payload
+
+class TestExecutorObserver():
+    def execute_test_observe_result(self, test_configuration: OperatorFlightDataTestConfiguration, test_payload:TestPayload, auth_spec = None):
+        report = Report(setup=Setup(configuration= test_configuration, expected_result=test_payload.result))
+
+        injection_path = test_configuration.injection_target
+        t_now = arrow.utcnow().datetime
+        try: 
+            response = requests.put(url=injection_path, json=test_payload)
+        except Exception as e:
+            report.error = "Error in Submission"
+        if response.status_code == 201:
+            response_message = response.json()
+        else:
+            report.error = response.json()
+
+        report.finding = TestResult(result = response_message['result'])
+
+        with open('report.json', 'w') as f:
+            json.dump(report, f)
+        return report
 
 
 def main(test_configuration: OperatorFlightDataTestConfiguration,
         auth_spec: str = None) -> Report:
     my_test_builder = TestBuilder()
     test_payload = my_test_builder.build_test_payload()
-    report = Report(setup=Setup(configuration= test_configuration, finding=test_payload.result)
-    )
+    my_test_executor = TestExecutorObserver()
+    my_test_executor.execute_test_observe_result(test_configuration= test_configuration, test_payload = test_payload, auth_spec = auth_spec)
+
 
 if __name__ == '__main__':
     ''' This module generates a JSON that can be used to test '''
