@@ -114,20 +114,29 @@ components:
         - broadcast
       description: Specify a Identification technology
   
-    OperatorDataProcessingResponseFormat:
+    OperatorDataProcessingPassResponse:
       type: object
       properties:
         result:
-          type: string 
-          anyOf:
-            - $ref: '#/components/schemas/ProcessingPassorFail'
+          $ref: '#/components/schemas/ProcessingPass'
 
-    ProcessingPassorFail:
+    OperatorDataProcessingFailResponse:
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/ProcessingFail'
+
+    ProcessingPass:
       type: string
       enum:
         - pass
+      description: The operator data was processed
+
+    ProcessingFail:
+      type: string
+      enum:
         - fail
-      description: Specify if the operator data posted passed or failed processing
+      description: The operator data was not processed
 
 paths:
   
@@ -146,8 +155,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OperatorDataProcessingResponseFormat'
-          description: Requested test was created successfully.
+                $ref: '#/components/schemas/OperatorDataProcessingPassResponse'
+          description: Requested data was processed successfully 
+          
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperatorDataProcessingFailResponse'
+          description: Requested data could not be processed
           
       operationId: createTest
       summary: Create a test and process data
