@@ -2,27 +2,29 @@ from dataclasses import dataclass
 import enum
 from typing import List, Literal
 
-
-@dataclass
-class OperatorLocation():
-    ''' A object to hold location of the operator when submitting flight data to USS '''
-    lat: float
-    lng: float
-
+class OperationMode(str, enum.Enum):
+    ''' A enum to hold all modes of an operation '''
+    Undeclared = 'Undeclared'
+    Vlos = 'Vlos'
+    Bvlos = 'Bvlos'
 
 class OperationCategory(str, enum.Enum):
-    ''' A enum to hold all categories of an operation '''
-    Vlos = 'vlos'
-    Bvlos = 'bvlos'
+    ''' A enum to hold all categories for an operation '''
+    Open = 'Open'
+    Specific = 'Specific'
+    Certified = 'Certified'
 
 
 class UASClass(str, enum.Enum):
     ''' A enum to hold all UAS Classes '''
+    Other = 'Other'
     C0 = 'C0'
     C1 = 'C1'
     C2 = 'C2'
     C3 = 'C3'
     C4 = 'C4'
+    C5 = 'C5'
+    C6 = 'C6'
 
 class TestResultState(str, enum.Enum):
     ''' A test is either pass or fail or could not be processed, currently not  '''
@@ -36,19 +38,20 @@ class IDTechnology(str, enum.Enum):
     Broadcast = 'broadcast'
 
 @dataclass
-class PartialOperatorDataPayload:
+class FlightAuthorizationData:
     '''A class to hold information about Flight Authorization Test'''
     uas_serial_number: str
-    operation_mode: Literal[OperationCategory.Vlos, OperationCategory.Bvlos]
-    operation_category: str
-    uas_class: Literal[UASClass.C0, UASClass.C1,
-                       UASClass.C2, UASClass.C3, UASClass.C4, ]
-    identification_technologies: Literal[IDTechnology.Network,
-                                         IDTechnology.Broadcast]
+    operation_mode: Literal[OperationMode.Undeclared, OperationMode.Vlos, OperationMode.Bvlos]
+    operation_category: Literal[OperationCategory.Open, OperationCategory.Specific, OperationCategory.Certified]
+    uas_class: Literal[UASClass.Other,UASClass.C0, UASClass.C1,
+                       UASClass.C2, UASClass.C3, UASClass.C4,UASClass.C5, UASClass.C6  ]
+    identification_technologies: List[str]
+    uas_type_certificate: str
     connectivity_methods: List[str]
     endurance_minutes: int
     emergency_procedure_url: str
     operator_id: str
+    uas_id: str
 
 @dataclass
 class ExpectedTestResult:
@@ -59,7 +62,7 @@ class ExpectedTestResult:
 @dataclass
 class TestPayload:
     ''' A class to hold data about test data and the expected result, the test driver would submit the data and the result to the test harness '''
-    operator_data: PartialOperatorDataPayload
+    operator_data: FlightAuthorizationData
     expected_result: ExpectedTestResult
 
 

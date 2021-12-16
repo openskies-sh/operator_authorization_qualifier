@@ -17,19 +17,19 @@ class TestBuilder() :
         my_operator_flight_data_generator = OperatorFlightDataGenerator()
         all_coin_flips =[]
         
-        serial_number = my_operator_flight_data_generator.generate_serial_number()       
+        serial_number = my_operator_flight_data_generator.generate_uav_serial_number()       
 
         should_fail = self.coin_flip() # check if the test should pass or fail, if the test should pass then no changes should be made to the serial number / registration number shoould not be tampered
         all_coin_flips.append(should_fail)
         if should_fail: # 0
             # take a valid serial_number and make it invalid
-            serial_number = my_operator_flight_data_generator.generate_incorrect_serial_number(valid_serial_number=serial_number)
+            serial_number = my_operator_flight_data_generator.generate_incorrect_uav_serial_number(valid_serial_number=serial_number)
 
-        operator_registration_number = my_operator_flight_data_generator.generate_registration_number()
+        operator_registration_number = my_operator_flight_data_generator.generate_operator_registration_number()
         should_fail = self.coin_flip() # check if the test should pass or fail, if the test should pass then no changes should be made to the serial number / registration number shoould not be tampered
         all_coin_flips.append(should_fail)        
         if should_fail:
-            operator_registration_number = my_operator_flight_data_generator.generate_incorrect_registration_number(valid_registration_number=operator_registration_number)
+            operator_registration_number = my_operator_flight_data_generator.generate_incorrect_uav_registration_number(valid_registration_number=operator_registration_number)
 
         
         operator_data_payload = PartialOperatorDataPayload(uas_serial_number = serial_number, operation_category='u-space', operation_mode = 'vlos',uas_class='C0', identification_technologies = 'vlos', connectivity_methods = [], endurance_minutes = [] , emergency_procedure_url = "https://uav.com/emergency", operator_id = operator_registration_number)
