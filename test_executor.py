@@ -56,7 +56,7 @@ class TestExecutorObserver():
             response_message = response.json()
         else:
             report.error = response.json()
-
+            
         report.finding = TestResult(result = response_message['result'])
 
         with open('report.json', 'w') as f:
